@@ -1,0 +1,88 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../ac-view/ac-led.html">
+
+<dom-module id="flute-half-circle-key">
+    <template>
+        <style>
+            [half-circle]{
+                height:30px;
+                width:20px;
+                border-radius:10px 2px 2px 10px;
+                position: absolute;
+                background-color: var(--content-background,#fafafa);
+            }
+            [shadow]{
+                height:30px;
+                width:20px;
+                border-radius: 10px 2px 2px 10px;
+                position: absolute;
+                margin-top: 3px;
+                background-color: var(--ac-led-shadow,gray);
+            }
+            [acLed]{
+                height:30px;
+                width:20px;
+                border-radius: 10px 2px 2px 10px;
+                position: absolute;
+            }
+            [wrapper]{
+                height:30px;
+                width:20px;
+                border-radius: 10px 2px 2px 10px;
+            }
+            .rotated {
+                transform: rotate(90deg) ; 
+            }
+            [note]{
+                display:none ;
+            }
+            .rotatedShadow{
+                margin-top:0px ;
+                margin-left:3px ;
+            }
+        </style>
+        <div wrapper class$='{{_computeRotation(rotated)}}'>
+            <div shadow style$='width:[[keyWidth]]; height:[[keyHeight]];' class$='{{_computeShadowRotation(rotated)}}'></div>
+            <div half-circle  >
+                <!-- <div noteNames style$='display:{{_computeDisplay(___acV_displayingNotes)}} ;'>
+                    [[note]]
+                </div> -->
+            </div>
+            <div acLed >
+                <!-- override default -->
+                <div note>
+                    F#
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+        class FluteHalfCircleKey extends ACLed {
+            static get is() { return 'flute-half-circle-key'; }
+            static get properties() {return {
+                isSmall:{type:Boolean,value:false},
+                rotated:{type:Boolean,value:false}
+            }}
+            constructor() {
+                super();
+            }
+            _computeRotation (rotated) {
+                if (rotated) {
+                    return 'rotated' ; 
+                }
+                return '' ; 
+            }
+            _computeShadowRotation (rotated) {
+                if (rotated) {
+                    return 'rotatedShadow' ; 
+                }
+                return '' ; 
+            }
+            ready() {
+                super.ready() ;
+                this.___acV_isMonophonic = true ; 
+            }
+        }
+        customElements.define('flute-half-circle-key', FluteHalfCircleKey);
+    </script>
+</dom-module>

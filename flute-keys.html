@@ -1,0 +1,219 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../ac-view/ac-led-group.html">
+<link rel="import" href="../ac-view/view-audio.html">
+<link rel="import" href="./flute-key.html">
+<link rel="import" href="./flute-oval-key.html">
+<link rel="import" href="./flute-square-key.html">
+<link rel="import" href="./flute-half-circle-key.html">
+
+<dom-module id="flute-keys">
+    <template>
+        <style keys>
+            [squares]{
+                @apply --layout-center;
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+            }
+        </style>
+        <style>
+            [playbackNote]{
+                margin-top:12px ; 
+                font-size: 26px ;
+                font-weight: 400 ; 
+                color: var(--ac-led-shadow,gray);
+            }
+            [instrumentNote]{
+                margin-top:35px ; 
+                font-size: 26px ;
+                font-weight: 400 ; 
+                color: var(--ac-led-shadow,gray);
+            }
+            [wrapper]{
+                height: 100%;
+                width: 100%;
+                @apply --layout-center;
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+            }
+            [flute-wrapper]{
+                margin-top:0 ;
+                height: 80vh;
+                width: 100%;
+                @apply --layout-center;
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+            }
+            [flute]{
+                margin-left:5px ;
+                @apply --layout-center;
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+            }
+            [col]{
+                margin-top:0px;
+                height:433px ;
+                @apply --layout-center;
+                @apply --layout-vertical;
+                /* @apply --layout-center-justified; */
+            }
+            [col] *{
+                margin:5px;
+            }
+            [notes]{
+                position: absolute;
+                margin-left:-30px ;
+                margin-top:-40px;
+            }
+            [horizontal-keys]{
+                margin-top:-5px ;
+                margin-right:-45px ;
+                @apply --layout-center;
+                @apply --layout-horizontal;
+                width:50px ;
+            }
+            [horizontal-keys]  *{
+                margin: 0 ;
+            }
+        </style>
+        <view-audio channel='0'></view-audio>
+        <div wrapper style='margin-left:14px;'>
+            <div flute-wrapper>
+                <div flute>
+                    <div col style='margin-right:-5px;'>
+                        <div notes>
+                            <div playbackNote></div>
+                            <div instrumentNote></div>
+                        </div>
+                        <flute-key is-small style='visibility: hidden;position: absolute;' style='margin-bottom:65px; margin-top:58px; margin-left:-8px;' is-small acLed ac-id='0' channel='0'></flute-key>
+                        <flute-key is-small style='visibility:hidden; margin-top:20px; margin-left:-8px;' is-small acLed ac-id='1' channel='0'></flute-key>
+                        <flute-half-circle-key style='transform: scale(1.3); margin-top:10px; margin-bottom:65px;margin-left:-8px;' is-small acLed ac-id='2' channel='0'></flute-half-circle-key>
+                        <flute-oval-key style='visibility:hidden; margin-top:20px;margin-right:-3px; transform: rotate(45deg);'  acLed ac-id='3' channel='0'></flute-oval-key>
+                        <flute-oval-key style='margin-top:30px; margin-right:-3px;' acLed ac-id='4' channel='0'></flute-oval-key>
+                        <flute-oval-key style='margin-top:30px; margin-right:-3px;' acLed ac-id='5' channel='0'></flute-oval-key>
+                        <flute-half-circle-key rotated style='margin-top:30px; margin-right:-20px; transform: scaleX(1.5);' style='margin-top:10px; margin-bottom:65px;margin-left:-8px;' is-small acLed ac-id='6' channel='0'></flute-half-circle-key>
+                        <div horizontal-keys>
+                            <flute-half-circle-key style='margin-left:-10px;' acLed ac-id='7' channel='0'></flute-half-circle-key>
+                            <flute-oval-key rotated acLed ac-id='8' style='margin-left:-5px;' channel='0'></flute-oval-key>
+                            <flute-oval-key rotated style='visibility: hidden; margin-left:-15px;' acLed ac-id='9' channel='0'></flute-oval-key>
+                        </div>
+                        <flute-oval-key acLed ac-id='10' channel='0' style='visibility:hidden; margin-top:2px;margin-right:-30px;'></flute-oval-key>
+                    </div>
+                    <div col>
+                        <flute-key acLed ac-id='11' channel='0'></flute-key>
+                        <flute-key acLed ac-id='12' channel='0'></flute-key>
+                        <flute-key acLed ac-id='13' channel='0'></flute-key>
+                        <div col style='margin-top: 28px;'>
+                            <flute-key acLed ac-id='14' channel='0'></flute-key>
+                            <flute-key acLed ac-id='15' channel='0'></flute-key>
+                            <flute-key acLed ac-id='16' channel='0'></flute-key>
+                        </div>
+                    </div>
+                    <div col>
+                        <flute-oval-key style='margin-top:140px; margin-left:-10px; transform: rotate(-45deg)' acLed ac-id='17' channel='0'></flute-oval-key>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </template>
+    <script>
+        class FluteKeys extends ACLedGroup {
+            static get is() { return 'flute-keys'; }
+            static get properties() {return {
+                midiNoteToGUI:{type:Array,value:[]}
+            }}
+            constructor() {
+                super();
+            }
+            ___acV_midiEventToAudioNote (channel, midiNote, origin,initiator) {
+                if (origin.startsWith('___midi_instrument')  || initiator ==='record')
+                    return midiNote ;
+                return this.___acV_midiEventToAudioNoteDefault(channel, midiNote, origin);
+            }
+            ___acV_mapMIDIEventToAcLedId (channel, midiNote, origin ,initiator) {
+                if (origin.startsWith('___midi_instrument') || initiator ==='record') {
+                    if(this.midiNoteToGUI[midiNote - this.___acV_viewPitchDiff] === undefined ) 
+                        return [] ; 
+
+                    return this.midiNoteToGUI[midiNote - this.___acV_viewPitchDiff];
+                }
+
+                if (this.midiNoteToGUI[midiNote  + this.___acV_recordingPitchDiff - this.___acV_viewPitchDiff] === undefined) 
+                    return [] ; 
+                return this.midiNoteToGUI[midiNote  + this.___acV_recordingPitchDiff - this.___acV_viewPitchDiff];
+            }
+            ___acV_mapMIDIEventToAcLedState (channel,midiNote,origin,initiator) {
+                var len ,res = []; 
+                if (origin.startsWith('___midi_instrument') || initiator ==='record') {
+                    if(this.midiNoteToGUI[midiNote - this.___acV_viewPitchDiff] === undefined ) 
+                        return [] ; 
+                    len = this.midiNoteToGUI[midiNote - this.___acV_viewPitchDiff ].length;
+                    for(let i = 0 ; i < len ; i ++ )
+                        res.push(1) ;
+                    return res ;
+                }
+
+                if (this.midiNoteToGUI[midiNote  + this.___acV_recordingPitchDiff - this.___acV_viewPitchDiff] === undefined) 
+                    return [] ; 
+                len = this.midiNoteToGUI[midiNote  + this.___acV_recordingPitchDiff - this.___acV_viewPitchDiff ].length ; 
+                for(let i = 0 ; i < len ; i ++ )
+                    res.push(1) ;
+                return res ;
+            }
+            ready() {
+                super.ready() ;
+                this.midiNoteToGUI = [] ;
+                
+                this.midiNoteToGUI[60] = [2,7,8,11,12,13,14,15,16]; // C4
+                this.midiNoteToGUI[61] = [2,7,11,12,13,14,15,16]; // C#4
+                this.midiNoteToGUI[62] = [2,11,12,13,14,15,16]; // D4
+                this.midiNoteToGUI[63] = [2,6,11,12,13,14,15,16]; //  Eb4
+                this.midiNoteToGUI[64] = [2,6,11,12,13,14,15]; // E4 
+                this.midiNoteToGUI[65] = [2,6,11,12,13,14]; //  F4
+                this.midiNoteToGUI[66] = [2,6,11,12,13,16]; // F#4
+                this.midiNoteToGUI[67] = [2,6,11,12,13]; // G4  
+                this.midiNoteToGUI[68] = [2,6,11,12,13,17]; // G#4 
+                this.midiNoteToGUI[69] = [2,6,11,12]; // A4
+                this.midiNoteToGUI[70] = [2,6,11,14]; // Bb4  
+                this.midiNoteToGUI[71] = [2,6,11]; // B4
+
+                this.midiNoteToGUI[72] = [11,6]; //  C5
+                this.midiNoteToGUI[73] = [6]; //  C#5
+                this.midiNoteToGUI[74] = [2,12,13,14,15,16]; // D5
+                this.midiNoteToGUI[75] = [2,6,12,13,14,15,16]; // Eb5
+                this.midiNoteToGUI[76] = [2,6,11,12,13,14,15]; // E5
+                this.midiNoteToGUI[77] = [2,6,11,12,13,14]; //  F5
+                this.midiNoteToGUI[78] = [2,6,11,12,13,16]; // F#5
+                this.midiNoteToGUI[79] = [2,6,11,12,13]; //  G5
+                this.midiNoteToGUI[80] = [2,6,11,12,13,17]; // G#5
+                this.midiNoteToGUI[81] = [2,6,11,12]; // A5
+                this.midiNoteToGUI[82] = [2,11,14,6]; // Bb5
+                this.midiNoteToGUI[83] = [2,6,11]; // B5
+
+                this.midiNoteToGUI[84] = [6,11]; // C6
+                this.midiNoteToGUI[85] = [6]; // C#6
+                this.midiNoteToGUI[86] = [2,6,12,13]; // D6
+                this.midiNoteToGUI[87] = [2,6,11,12,13,14,15,16,17]; // Eb6
+                this.midiNoteToGUI[88] = [2,6,11,12,14,15]; // E6
+                this.midiNoteToGUI[89] = [2,6,11,13,14]; //  F6
+                this.midiNoteToGUI[90] = [2,6,11,13,16]; // F#6
+                this.midiNoteToGUI[91] = [6,11,12,13]; // G6
+                this.midiNoteToGUI[92] = [6,12,13,17]; // G#6
+                this.midiNoteToGUI[93] = [2,6,12,14]; // A6
+                this.midiNoteToGUI[94] = [2,4,14]; // Bb6
+                this.midiNoteToGUI[95] = [2,5,11,13]; // B6
+                
+                this.midiNoteToGUI[96] = [11,12,13,14,17]; // C7
+                this.midiNoteToGUI[97] = [12,14,17]; // C#7
+                this.midiNoteToGUI[98] = [2,7,8,13,14,15]; // D7
+                this.midiNoteToGUI[99] = [2,4,13,15,17]; // Eb7
+                this.midiNoteToGUI[100] = [5,11,12,13,15]; // E
+                this.midiNoteToGUI[101] = [5,12,15]; // F7 
+                this.midiNoteToGUI[102] = [2,12,13,15,16,17]; // F#7 
+
+
+            }
+        }
+        customElements.define('flute-keys', FluteKeys);
+    </script>
+</dom-module>

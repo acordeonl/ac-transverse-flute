@@ -1,0 +1,30 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../ac-view/ac-view.html">
+<link rel="import" href="./flute-keys.html">
+<dom-module id="ac-transverse-flute">
+    <template>
+        <style>
+        </style>
+        <flute-keys acLedGroup name='transverse-flute'>
+        </flute-keys>
+    </template>
+    <script>
+        class ACTransverseFlute extends ACView {
+            static get is() { return 'ac-transverse-flute'; }
+            static get properties() {return {}}
+            constructor() {
+                super();
+            }
+            ___acV_handleMIDIEvent (e) {
+                this.shadowRoot.querySelector('flute-keys').___acV_onMIDIEvent(e);
+            }
+            ready() {
+                super.ready() ;
+                this.___acV_setName('transverse-flute') ; 
+                this.___acV_setDefaultReverb(30);
+                this.___acV_setDefaultViewPitch(60) ; 
+            }
+        }
+        customElements.define('ac-transverse-flute', ACTransverseFlute);
+    </script>
+</dom-module>
